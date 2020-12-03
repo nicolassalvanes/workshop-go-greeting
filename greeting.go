@@ -1,13 +1,22 @@
 package main
 
 import "github.com/gin-gonic/gin"
+import "github.com/nicolassalvanes/workshop-go-greeting/rest"
+
+type Greeting struct {
+	Greeting string `json:"greeting"`
+}
 
 func main() {
 	r := gin.Default()
+	client := rest.New()
+	response := new(Greeting)
+	client.Get("https://go-workshop-meli.herokuapp.com/greeting", nil, response)
+
 	r.GET("/greet", addCors, func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"owner": "Nicolás Salvanés",
-			"greeting": "Hola, trabajo como TL de IT en Developer Experience",
+			"greeting": response.Greeting,
 			"repository": "https://github.com/nicolassalvanes/workshop-go-greeting",
 		})
 	})
